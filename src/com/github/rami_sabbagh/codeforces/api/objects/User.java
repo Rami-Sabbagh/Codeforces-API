@@ -1,7 +1,6 @@
 package com.github.rami_sabbagh.codeforces.api.objects;
 
 import java.net.URI;
-import java.net.URL;
 
 /**
  * Represents a Codeforces user.

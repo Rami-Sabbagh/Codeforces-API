@@ -21,13 +21,6 @@ import java.util.Random;
 
 public class Codeforces {
 
-    public Codeforces() {}
-
-    public Codeforces(String apiKey, String apiSecret) {
-        this.apiKey = apiKey;
-        this.apiSecret = apiSecret;
-    }
-
     /**
      * The base URL of the Codeforces API, override it if ever needed.
      */
@@ -40,21 +33,26 @@ public class Codeforces {
      * The api key for authorization, null when disabled.
      */
     protected String apiKey;
-
     /**
      * The api secret for authorization, null when disabled.
      */
     protected String apiSecret;
-
     /**
      * The random generator for the authorization string, seed initialized into the system time.
      */
     protected Random randomGenerator = new Random(System.currentTimeMillis());
-
     /**
      * The gson instance used for deserializing the responses (from JSON).
      */
     protected Gson gson = new Gson();
+
+    public Codeforces() {
+    }
+
+    public Codeforces(String apiKey, String apiSecret) {
+        this.apiKey = apiKey;
+        this.apiSecret = apiSecret;
+    }
 
     /**
      * Calculate SHA-512 of a string.
