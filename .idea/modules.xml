@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/CodeforcesAPI.iml" filepath="$PROJECT_DIR$/CodeforcesAPI.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Codeforces-API.iml" filepath="$PROJECT_DIR$/Codeforces-API.iml" />
     </modules>
   </component>
 </project>
