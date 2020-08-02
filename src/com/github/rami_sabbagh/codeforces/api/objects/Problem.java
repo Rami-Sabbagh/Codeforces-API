@@ -6,7 +6,7 @@ import com.github.rami_sabbagh.codeforces.api.enums.ProblemType;
  * Represents a problem.
  */
 @SuppressWarnings("unused")
-public class Problem {
+public class Problem extends CFObject {
 
     /**
      * Can be absent. Id of the contest, containing the problem.

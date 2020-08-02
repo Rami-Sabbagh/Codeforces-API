@@ -6,7 +6,7 @@ import java.net.URI;
  * Represents a Codeforces user.
  */
 @SuppressWarnings("unused")
-public class User {
+public class User extends CFObject {
     /**
      * Codeforces user handle.
      */

@@ -7,7 +7,7 @@ import com.github.rami_sabbagh.codeforces.api.enums.Verdict;
  * Represents a submission.
  */
 @SuppressWarnings("unused")
-public class Submission {
+public class Submission extends CFObject {
 
     public int id;
 

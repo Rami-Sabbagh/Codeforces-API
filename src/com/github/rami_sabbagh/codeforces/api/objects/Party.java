@@ -6,7 +6,7 @@ import com.github.rami_sabbagh.codeforces.api.enums.ParticipantType;
  * Represents a party, participating in a contest.
  */
 @SuppressWarnings("unused")
-public class Party {
+public class Party extends CFObject {
 
     /**
      * Can be absent. Id of the contest, in which party is participating.
