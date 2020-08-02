@@ -1,5 +1,7 @@
 package com.github.rami_sabbagh.codeforces.api.objects;
 
+import com.github.rami_sabbagh.codeforces.api.enums.ParticipantType;
+
 /**
  * Represents a party, participating in a contest.
  */
@@ -44,14 +46,4 @@ public class Party {
      */
     public long startTimeSeconds;
 
-    /**
-     * Party's participantType's enum.
-     */
-    public enum ParticipantType {
-        CONTESTANT,
-        PRACTICE,
-        VIRTUAL,
-        MANAGER,
-        OUT_OF_COMPETITION
-    }
 }

@@ -1,5 +1,7 @@
 package com.github.rami_sabbagh.codeforces.api.objects;
 
+import com.github.rami_sabbagh.codeforces.api.enums.ProblemType;
+
 /**
  * Represents a problem.
  */
@@ -26,7 +28,7 @@ public class Problem {
      */
     public String name;
 
-    public Type type;
+    public ProblemType type;
 
     /**
      * Can be absent. Maximum amount of points for the problem.
@@ -42,12 +44,4 @@ public class Problem {
      * Problem tags.
      */
     public String[] tags;
-
-    /**
-     * Problem's type enum.
-     */
-    public enum Type {
-        PROGRAMMING,
-        QUESTION
-    }
 }
