@@ -347,6 +347,52 @@ public class CodeforcesClient {
     }
 
     /**
+     * Returns recent actions.
+     *
+     * @param maxCount Number of recent actions to return. Can be up to 100.
+     * @return A list of RecentAction objects.
+     * @throws InterruptedException When the thread is interrupted during the request.
+     * @throws CFException          When the Codeforces API responses with a failure.
+     * @throws IOException          When the HTTP API connection fails.
+     */
+    public RecentAction[] requestRecentActions(int maxCount) throws InterruptedException, CFException, IOException {
+        SortedMap<String, String> parameters = new TreeMap<>();
+        parameters.put("maxCount", String.valueOf(maxCount));
+        return request("recentActions", parameters, RecentAction[].class);
+    }
+
+    /**
+     * Returns a list of all user's blog entries.
+     *
+     * @param handle Codeforces user handle.
+     * @return A list of BlogEntry objects in short form.
+     * @throws InterruptedException When the thread is interrupted during the request.
+     * @throws CFException          When the Codeforces API responses with a failure.
+     * @throws IOException          When the HTTP API connection fails.
+     */
+    public BlogEntry[] requestUserBlogEntries(String handle) throws InterruptedException, CFException, IOException {
+        if (handle == null) throw new NullPointerException("handle is null!");
+        SortedMap<String, String> parameters = new TreeMap<>();
+        parameters.put("handle", handle);
+        return request("user.blogEntries", parameters, BlogEntry[].class);
+    }
+
+    /**
+     * Returns authorized user's friends. Using this method requires authorization.
+     *
+     * @param onlyOnline If <i>true</i> only online friends are returned. Otherwise, all friends are returned.
+     * @return Returns a list of strings — users' handles.
+     * @throws InterruptedException When the thread is interrupted during the request.
+     * @throws CFException          When the Codeforces API responses with a failure.
+     * @throws IOException          When the HTTP API connection fails.
+     */
+    public String[] requestUserFriends(Boolean onlyOnline) throws InterruptedException, CFException, IOException {
+        SortedMap<String, String> parameters = new TreeMap<>();
+        if (onlyOnline != null) parameters.put("onlyOnline", String.valueOf(onlyOnline));
+        return request("user.friends", parameters, String[].class);
+    }
+
+    /**
      * Returns information about one or several users.
      *
      * @param handles Semicolon-separated list of handles. No more than 10000 handles is accepted.
@@ -356,9 +402,61 @@ public class CodeforcesClient {
      * @throws IOException          When the HTTP API connection fails.
      */
     public User[] requestUsersInformation(String handles) throws InterruptedException, CFException, IOException {
+        if (handles == null) throw new NullPointerException("handles is null!");
         SortedMap<String, String> parameters = new TreeMap<>();
         parameters.put("handles", handles);
         return request("user.info", parameters, User[].class);
+    }
+
+    /**
+     * Returns the list users who have participated in at least one rated contest.
+     *
+     * @param activeOnly If true then only users, who participated in rated contest during the last month are returned. Otherwise, all users with at least one rated contest are returned.
+     * @return A list of User objects, sorted in decreasing order of rating.
+     * @throws InterruptedException When the thread is interrupted during the request.
+     * @throws CFException          When the Codeforces API responses with a failure.
+     * @throws IOException          When the HTTP API connection fails.
+     */
+    public User[] requestRatedUsersList(Boolean activeOnly) throws InterruptedException, CFException, IOException {
+        SortedMap<String, String> parameters = new TreeMap<>();
+        if (activeOnly != null) parameters.put("activeOnly", String.valueOf(activeOnly));
+        return request("user.ratedList", parameters, User[].class);
+    }
+
+    /**
+     * Returns rating history of the specified user.
+     *
+     * @param handle Codeforces user handle.
+     * @return A list of RatingChange objects for requested user.
+     * @throws InterruptedException When the thread is interrupted during the request.
+     * @throws CFException          When the Codeforces API responses with a failure.
+     * @throws IOException          When the HTTP API connection fails.
+     */
+    public RatingChange[] requestUserRating(String handle) throws InterruptedException, CFException, IOException {
+        if (handle == null) throw new NullPointerException("handle is null!");
+        SortedMap<String, String> parameters = new TreeMap<>();
+        parameters.put("handle", handle);
+        return request("user.rating", parameters, RatingChange[].class);
+    }
+
+    /**
+     * Returns submissions of specified user.
+     *
+     * @param handle Codeforces user handle.
+     * @param from   (optional) (can be null) 1-based index of the first submission to return.
+     * @param count  (optional) (can be null) Number of returned submissions.
+     * @return A list of Submission objects, sorted in decreasing order of submission id.
+     * @throws InterruptedException When the thread is interrupted during the request.
+     * @throws CFException          When the Codeforces API responses with a failure.
+     * @throws IOException          When the HTTP API connection fails.
+     */
+    public Submission[] requestUserStatus(String handle, Integer from, Integer count) throws InterruptedException, CFException, IOException {
+        if (handle == null) throw new NullPointerException("handle is null!");
+        SortedMap<String, String> parameters = new TreeMap<>();
+        parameters.put("handle", handle);
+        if (from != null) parameters.put("from", String.valueOf(from));
+        if (count != null) parameters.put("count", String.valueOf(count));
+        return request("user.status", parameters, Submission[].class);
     }
 
     /**
@@ -557,7 +655,8 @@ public class CodeforcesClient {
         /**
          * The request's status enum.
          */
-        protected enum Status {
+        @SuppressWarnings("unused")
+        private enum Status {
             OK, FAILED
         }
     }
