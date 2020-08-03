@@ -292,6 +292,61 @@ public class CodeforcesClient {
     }
 
     /**
+     * Returns submissions for specified contest. Optionally can return submissions of specified user.
+     *
+     * @param contestId Id of the contest. It is not the round number. It can be seen in contest URL. For example: /contest/566/status
+     * @param handle    (optional) (can be null) Codeforces user handle.
+     * @param from      (optional) (can be null) 1-based index of the first submission to return.
+     * @param count     (optional) (can be null) Number of returned submissions.
+     * @return A list of Submission objects, sorted in decreasing order of submission id.
+     * @throws InterruptedException When the thread is interrupted during the request.
+     * @throws CFException          When the Codeforces API responses with a failure.
+     * @throws IOException          When the HTTP API connection fails.
+     */
+    public Submission[] requestContestStatus(int contestId, String handle, Integer from, Integer count) throws InterruptedException, CFException, IOException {
+        SortedMap<String, String> parameters = new TreeMap<>();
+        parameters.put("contestId", String.valueOf(contestId));
+        if (handle != null) parameters.put("handle", handle);
+        if (from != null) parameters.put("from", String.valueOf(from));
+        if (count != null) parameters.put("count", String.valueOf(count));
+        return request("contest.status", parameters, Submission[].class);
+    }
+
+    /**
+     * Returns all problems from problemset. Problems can be filtered by tags.
+     *
+     * @param tags           (optional) (can be null) Semicolon-separated list of tags.
+     * @param problemsetName (optional) (can be null) Custom problemset's short name, like 'acmsguru'
+     * @return The ProblemSet.
+     * @throws InterruptedException When the thread is interrupted during the request.
+     * @throws CFException          When the Codeforces API responses with a failure.
+     * @throws IOException          When the HTTP API connection fails.
+     */
+    public ProblemSet requestProblemSet(String tags, String problemsetName) throws InterruptedException, CFException, IOException {
+        SortedMap<String, String> parameters = new TreeMap<>();
+        if (tags != null) parameters.put("tags", tags);
+        if (problemsetName != null) parameters.put("problemsetName", problemsetName);
+        return request("problemset.problems", parameters, ProblemSet.class);
+    }
+
+    /**
+     * Returns recent submissions.
+     *
+     * @param count          Number of submissions to return. Can be up to 1000.
+     * @param problemsetName (optional) (can be null) Custom problemset's short name, like 'acmsguru'
+     * @return A list of Submission objects, sorted in decreasing order of submission id.
+     * @throws InterruptedException When the thread is interrupted during the request.
+     * @throws CFException          When the Codeforces API responses with a failure.
+     * @throws IOException          When the HTTP API connection fails.
+     */
+    public Submission[] requestProblemSetRecentStatus(int count, String problemsetName) throws InterruptedException, CFException, IOException {
+        SortedMap<String, String> parameters = new TreeMap<>();
+        parameters.put("count", String.valueOf(count));
+        if (problemsetName != null) parameters.put("problemsetName", problemsetName);
+        return request("problemset.recentStatus", parameters, Submission[].class);
+    }
+
+    /**
      * Returns information about one or several users.
      *
      * @param handles Semicolon-separated list of handles. No more than 10000 handles is accepted.
