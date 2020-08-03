@@ -1,18 +1,26 @@
 package com.github.rami_sabbagh.codeforces.api;
 
+import com.github.rami_sabbagh.codeforces.api.objects.User;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Type;
 import java.math.BigInteger;
 import java.net.ProxySelector;
+import java.net.URI;
 import java.net.URLEncoder;
 import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.Duration;
 import java.util.Map;
 import java.util.SortedMap;
+import java.util.TreeMap;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -152,6 +160,48 @@ public class CodeforcesClient {
 
         //Convert them into a string.
         return String.valueOf(result);
+    }
+
+    /**
+     * Executes a Codeforces API HTTP request.
+     *
+     * @param methodName The name of the API method.
+     * @param parameters The parameters of the API method.
+     * @param <R>        The result type of the method.
+     * @return The result of the method.
+     * @throws IOException          When the HTTP API connection fails.
+     * @throws InterruptedException When the thread is interrupted during the request.
+     * @throws CFException          When the Codeforces API responses with a failure.
+     */
+    private <R> R request(String methodName, SortedMap<String, String> parameters, Class<R> type) throws IOException, InterruptedException, CFException {
+        String endpoint = (apiKey == null) ? getEndpoint(methodName, parameters) : getAuthorizedEndpoint(methodName, parameters);
+        URI requestURI = URI.create(baseURL + endpoint);
+
+        HttpRequest request = HttpRequest.newBuilder(requestURI).build();
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+        Type resultType = TypeToken.getParameterized(Result.class, type).getType();
+        Result<R> result = gson.fromJson(response.body(), resultType);
+
+        if (result.status == Result.Status.FAILED)
+            throw new CFException(result.comment);
+
+        return type.cast(result.result);
+    }
+
+    /**
+     * Returns information about one or several users.
+     *
+     * @param handles Semicolon-separated list of handles. No more than 10000 handles is accepted.
+     * @return A list of User objects for requested handles.
+     * @throws InterruptedException When the thread is interrupted during the request.
+     * @throws CFException          When the Codeforces API responses with a failure.
+     * @throws IOException          When the HTTP API connection fails.
+     */
+    public User[] requestUsersInformation(String handles) throws InterruptedException, CFException, IOException {
+        SortedMap<String, String> parameters = new TreeMap<>();
+        parameters.put("handles", handles);
+        return request("user.info", parameters, User[].class);
     }
 
     /**
@@ -322,6 +372,36 @@ public class CodeforcesClient {
          */
         public CodeforcesClient build() {
             return new CodeforcesClient(httpClientBuilder.build(), apiKey, apiSecret);
+        }
+    }
+
+    /**
+     * An API request result.
+     *
+     * @param <T> The type of the result object.
+     */
+    protected static class Result<T> {
+        /**
+         * The status of the request, either OK or FAILED.
+         */
+        Status status;
+
+        /**
+         * If the status is <i>FAILED</i> then comment contains the reason why the request failed.
+         * If the status os <i>OK</i>, then there is no comment.
+         */
+        String comment;
+
+        /**
+         * The result of the request, null on when the status is <i>FAILED</i>.
+         */
+        T result;
+
+        /**
+         * The request's status enum.
+         */
+        protected enum Status {
+            OK, FAILED
         }
     }
 }
