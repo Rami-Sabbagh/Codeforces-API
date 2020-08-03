@@ -216,7 +216,7 @@ public class CodeforcesClient {
      * @throws CFException          When the Codeforces API responses with a failure.
      * @throws IOException          When the HTTP API connection fails.
      */
-    public BlogEntry requestBlogEntryView(int blogEntryId) throws InterruptedException, CFException, IOException {
+    public BlogEntry requestBlogEntry(int blogEntryId) throws InterruptedException, CFException, IOException {
         SortedMap<String, String> parameters = new TreeMap<>();
         parameters.put("blogEntryId", String.valueOf(blogEntryId));
         return request("blogEntry.view", parameters, BlogEntry.class);
