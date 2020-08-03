@@ -1,5 +1,8 @@
 package com.github.rami_sabbagh.codeforces.api;
 
+import com.github.rami_sabbagh.codeforces.api.objects.BlogEntry;
+import com.github.rami_sabbagh.codeforces.api.objects.Comment;
+import com.github.rami_sabbagh.codeforces.api.objects.Hack;
 import com.github.rami_sabbagh.codeforces.api.objects.User;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -187,6 +190,53 @@ public class CodeforcesClient {
             throw new CFException(result.comment);
 
         return type.cast(result.result);
+    }
+
+    /**
+     * Returns a list of comments to the specified blog entry.
+     *
+     * @param blogEntryId Id of the blog entry. It can be seen in blog entry URL. For example: /blog/entry/79
+     * @return A list of Comment objects.
+     * @throws InterruptedException When the thread is interrupted during the request.
+     * @throws CFException          When the Codeforces API responses with a failure.
+     * @throws IOException          When the HTTP API connection fails.
+     */
+    public Comment[] requestBlogEntryComments(int blogEntryId) throws InterruptedException, CFException, IOException {
+        SortedMap<String, String> parameters = new TreeMap<>();
+        parameters.put("blogEntryId", String.valueOf(blogEntryId));
+        return request("blogEntry.comments", parameters, Comment[].class);
+    }
+
+    /**
+     * Returns blog entry.
+     *
+     * @param blogEntryId Id of the blog entry. It can be seen in blog entry URL. For example: /blog/entry/79
+     * @return A BlogEntry object in full version.
+     * @throws InterruptedException When the thread is interrupted during the request.
+     * @throws CFException          When the Codeforces API responses with a failure.
+     * @throws IOException          When the HTTP API connection fails.
+     */
+    public BlogEntry requestBlogEntryView(int blogEntryId) throws InterruptedException, CFException, IOException {
+        SortedMap<String, String> parameters = new TreeMap<>();
+        parameters.put("blogEntryId", String.valueOf(blogEntryId));
+        return request("blogEntry.view", parameters, BlogEntry.class);
+    }
+
+    /**
+     * Returns list of hacks in the specified contests.
+     * Full information about hacks is available only after some time after the contest end.
+     * During the contest user can see only own hacks.
+     *
+     * @param contestId Id of the contest. It is not the round number. It can be seen in contest URL. For example: /contest/566/status
+     * @return A list of Hack objects.
+     * @throws InterruptedException When the thread is interrupted during the request.
+     * @throws CFException          When the Codeforces API responses with a failure.
+     * @throws IOException          When the HTTP API connection fails.
+     */
+    public Hack[] requestContestHacks(int contestId) throws InterruptedException, CFException, IOException {
+        SortedMap<String, String> parameters = new TreeMap<>();
+        parameters.put("contestId", String.valueOf(contestId));
+        return request("contest.hacks", parameters, Hack[].class);
     }
 
     /**
