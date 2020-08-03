@@ -8,28 +8,6 @@
     <artifactId>codeforces-api</artifactId>
     <version>1.0-SNAPSHOT</version>
 
-    <name>Codeforces-API</name>
-    <url>https://github.com/Rami-Sabbagh/Codeforces-API</url>
-    <organization>
-        <name>Rami Sabbagh</name>
-    </organization>
-    <description>A library for using the Codeforces HTTP API.</description>
-
-    <developers>
-        <developer>
-            <name>Rami Sabbagh</name>
-            <email>ramilego4game@gmail.com</email>
-            <roles>
-                <role>Lead Developer</role>
-            </roles>
-        </developer>
-    </developers>
-
-    <issueManagement>
-        <system>GitHub Issues Tracker</system>
-        <url>https://github.com/Rami-Sabbagh/Codeforces-API/issues</url>
-    </issueManagement>
-
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>11</maven.compiler.release>
