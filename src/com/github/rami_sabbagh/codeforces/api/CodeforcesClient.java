@@ -267,6 +267,31 @@ public class CodeforcesClient {
     }
 
     /**
+     * Returns the description of the contest and the requested part of the standings.
+     *
+     * @param contestId      Id of the contest. It is not the round number. It can be seen in contest URL. For example: /contest/566/status
+     * @param from           (optional) (can be null) 1-based index of the standings row to start the ranklist.
+     * @param count          (optional) (can be null) Number of standing rows to return.
+     * @param handles        (optional) (can be null) Semicolon-separated list of handles. No more than 10000 handles is accepted.
+     * @param room           (optional) (can be null) If specified, than only participants from this room will be shown in the result. If not — all the participants will be shown.
+     * @param showUnofficial (optional) (can be null) If <i>true</i> than all participants (virtual, out of competition) are shown. Otherwise, only official contestants are shown.
+     * @return The contest standings.
+     * @throws InterruptedException When the thread is interrupted during the request.
+     * @throws CFException          When the Codeforces API responses with a failure.
+     * @throws IOException          When the HTTP API connection fails.
+     */
+    public ContestStandings requestContestStandings(int contestId, Integer from, Integer count, String handles, Integer room, Boolean showUnofficial) throws InterruptedException, CFException, IOException {
+        SortedMap<String, String> parameters = new TreeMap<>();
+        parameters.put("contestId", String.valueOf(contestId));
+        if (from != null) parameters.put("from", String.valueOf(from));
+        if (count != null) parameters.put("count", String.valueOf(count));
+        if (handles != null) parameters.put("handles", handles);
+        if (room != null) parameters.put("room", String.valueOf(room));
+        if (showUnofficial != null) parameters.put("showUnofficial", String.valueOf(showUnofficial));
+        return request("contest.standings", parameters, ContestStandings.class);
+    }
+
+    /**
      * Returns information about one or several users.
      *
      * @param handles Semicolon-separated list of handles. No more than 10000 handles is accepted.
