@@ -245,9 +245,9 @@ public class CodeforcesClient {
      * @throws CFException          When the Codeforces API responses with a failure.
      * @throws IOException          When the HTTP API connection fails.
      */
-    public Contest[] requestContestsList(boolean gym) throws InterruptedException, CFException, IOException {
+    public Contest[] requestContestsList(Boolean gym) throws InterruptedException, CFException, IOException {
         SortedMap<String, String> parameters = new TreeMap<>();
-        parameters.put("gym", String.valueOf(gym));
+        if (gym != null) parameters.put("gym", String.valueOf(gym));
         return request("contest.list", parameters, Contest[].class);
     }
 
