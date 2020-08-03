@@ -1,14 +1,11 @@
-import com.github.rami_sabbagh.codeforces.api.Codeforces;
+import com.github.rami_sabbagh.codeforces.api.CodeforcesClient;
 import com.github.rami_sabbagh.codeforces.api.objects.User;
-
-import java.time.Duration;
 
 public class Main {
     public static void main(String[] args) {
-        Codeforces cf = new Codeforces();
-        cf.timeout = Duration.ofSeconds(30);
+        CodeforcesClient cf = CodeforcesClient.newBuilder().build();
 
-        System.out.println("Requesting user information...");
+        System.out.println("Requesting users information...");
         try {
             User[] users = cf.requestUsersInformation("Rami_Sabbagh;YamanQD");
             System.out.println("Got the data back!");
