@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"com.github.rami_sabbagh.codeforces.api"},{"l":"com.github.rami_sabbagh.codeforces.api.enums"},{"l":"com.github.rami_sabbagh.codeforces.api.objects"}]
