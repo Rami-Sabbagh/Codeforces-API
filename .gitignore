@@ -23,5 +23,8 @@
 hs_err_pid*
 
 # Intellj IDEA files
-.idea/dictionaries
-out
+/.idea
+*.iml
+
+# Maven
+/target/
