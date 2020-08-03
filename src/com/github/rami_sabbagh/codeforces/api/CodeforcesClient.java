@@ -25,6 +25,37 @@ import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * A Codeforces API client.
+ * <p>
+ * A CodeforcesClient can be used to send API requests and retrieve their responses.
+ * There are 2 ways to create a Client, with by creating a one with default configuration using {@code .newCodeforcesClient()}
+ * Or by using {@code .newBuilder()}, changing the configuration and {@code .build()}.
+ * <p>
+ * With Codeforces API you can get access to some of their data as objects.
+ * Each request call is an HTTP request to their API and thus requires an internet connection.
+ * <p>
+ * The requests my fail to connections issues, or due to invalid arguments or such.
+ * <p>
+ * The connection issues would result in an IOException, while API failures would result in a CFException.
+ * <p>
+ * API may be requested at most 5 times in one second.
+ * If you send more requests, the requests will throw a CFException with "Call limit exceeded" comment.
+ *
+ * <p><b>Simple Example</b>
+ * <pre>{@code     CodeforcesClient client = CodeforcesClient.newCodeforcesClient()
+ *    User[] user = client.requestUsersInformation("my_username");
+ *    System.out.println(user.toStringPretty());}</pre>
+ *
+ * <p><b>Authorization Example</b>
+ * <pre>{@code     Codeforces client = CodeforcesClient.newBuilder()
+ *                                        .authorization("api_key","api_secret")
+ *                                        .build();
+ *    String[] friends = client.requestUserFriends("my_username");
+ *    System.out.println("Friends:");
+ *    for (String friend : friends)
+ *        System.out.println("- " + friend);}</pre>
+ *
+ * @author Rami Sabbagh (@Rami-Sabbagh)
+ * @version 1.0.0
  */
 public class CodeforcesClient {
     /**
@@ -40,6 +71,10 @@ public class CodeforcesClient {
      */
     private static final char[] randomCharset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".toCharArray();
 
+    /**
+     * The language code for Language-depended fields like names or descriptions.
+     */
+    private final String lang;
     /**
      * The authorization apiKey, can be <i>null</i> for no authorization.
      */
@@ -58,6 +93,7 @@ public class CodeforcesClient {
      */
     private CodeforcesClient() {
         this.httpClient = HttpClient.newHttpClient();
+        this.lang = "en";
         this.apiKey = null;
         this.apiSecret = null;
     }
@@ -66,11 +102,13 @@ public class CodeforcesClient {
      * Creates a new CodeforcesClient with custom configuration.
      *
      * @param httpClient The HttpClient for executing the API requests.
+     * @param lang       The language to use for Language-depended fields like names or descriptions.
      * @param apiKey     The authorization apiKey, can be <i>null</i> for no authorization.
      * @param apiSecret  The authorization apiSection, must be null when apiKey is, and vice versa.
      */
-    private CodeforcesClient(HttpClient httpClient, String apiKey, String apiSecret) {
+    private CodeforcesClient(HttpClient httpClient, String lang, String apiKey, String apiSecret) {
         this.httpClient = httpClient;
+        this.lang = lang;
         this.apiKey = apiKey;
         this.apiSecret = apiSecret;
     }
@@ -174,6 +212,8 @@ public class CodeforcesClient {
      * @throws CFException          When the Codeforces API responses with a failure.
      */
     private <R> R request(String methodName, SortedMap<String, String> parameters, Class<R> type) throws IOException, InterruptedException, CFException {
+        parameters.put("lang", lang);
+
         String endpoint = (apiKey == null) ? getEndpoint(methodName, parameters) : getAuthorizedEndpoint(methodName, parameters);
         URI requestURI = URI.create(baseURL + endpoint);
 
@@ -524,10 +564,32 @@ public class CodeforcesClient {
      */
     public static class Builder {
         private final HttpClient.Builder httpClientBuilder = HttpClient.newBuilder();
+        private String lang = "en";
         private String apiKey;
         private String apiSecret;
 
         private Builder() {
+        }
+
+        /**
+         * Sets the language for Language-depended fields like names or descriptions.
+         *
+         * @param lang The language to use, can be <b>en</b> or <b>ru</b>.
+         * @return This builder.
+         */
+        public Builder language(String lang) {
+            this.lang = lang;
+            return this;
+        }
+
+        /**
+         * Resets to the default language (en).
+         *
+         * @return This builder.
+         */
+        public Builder language() {
+            this.lang = "en";
+            return this;
         }
 
         /**
@@ -626,7 +688,7 @@ public class CodeforcesClient {
          * @return a new CodeforcesClient.
          */
         public CodeforcesClient build() {
-            return new CodeforcesClient(httpClientBuilder.build(), apiKey, apiSecret);
+            return new CodeforcesClient(httpClientBuilder.build(), lang, apiKey, apiSecret);
         }
     }
 
