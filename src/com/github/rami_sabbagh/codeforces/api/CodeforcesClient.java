@@ -457,7 +457,7 @@ public class CodeforcesClient {
      *
      * @param <T> The type of the result object.
      */
-    protected static class Result<T> {
+    private static class Result<T> {
         /**
          * The status of the request, either OK or FAILED.
          */
