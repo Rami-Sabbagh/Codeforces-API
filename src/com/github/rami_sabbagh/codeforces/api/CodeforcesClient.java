@@ -1,9 +1,6 @@
 package com.github.rami_sabbagh.codeforces.api;
 
-import com.github.rami_sabbagh.codeforces.api.objects.BlogEntry;
-import com.github.rami_sabbagh.codeforces.api.objects.Comment;
-import com.github.rami_sabbagh.codeforces.api.objects.Hack;
-import com.github.rami_sabbagh.codeforces.api.objects.User;
+import com.github.rami_sabbagh.codeforces.api.objects.*;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -237,6 +234,36 @@ public class CodeforcesClient {
         SortedMap<String, String> parameters = new TreeMap<>();
         parameters.put("contestId", String.valueOf(contestId));
         return request("contest.hacks", parameters, Hack[].class);
+    }
+
+    /**
+     * Returns information about all available contests.
+     *
+     * @param gym If <i>true</i> then gym contests are returned. Otherwise, regular contests are returned.
+     * @return A list of Contest objects. If this method is called not anonymously, then all available contests for a calling user will be returned too, including mashups and private gyms.
+     * @throws InterruptedException When the thread is interrupted during the request.
+     * @throws CFException          When the Codeforces API responses with a failure.
+     * @throws IOException          When the HTTP API connection fails.
+     */
+    public Contest[] requestContestsList(boolean gym) throws InterruptedException, CFException, IOException {
+        SortedMap<String, String> parameters = new TreeMap<>();
+        parameters.put("gym", String.valueOf(gym));
+        return request("contest.list", parameters, Contest[].class);
+    }
+
+    /**
+     * Returns rating changes after the contest.
+     *
+     * @param contestId Id of the contest. It is not the round number. It can be seen in contest URL. For example: /contest/566/status
+     * @return A list of RatingChange objects.
+     * @throws InterruptedException When the thread is interrupted during the request.
+     * @throws CFException          When the Codeforces API responses with a failure.
+     * @throws IOException          When the HTTP API connection fails.
+     */
+    public RatingChange[] requestContestRatingChanges(int contestId) throws InterruptedException, CFException, IOException {
+        SortedMap<String, String> parameters = new TreeMap<>();
+        parameters.put("contestId", String.valueOf(contestId));
+        return request("contest.ratingChanges", parameters, RatingChange[].class);
     }
 
     /**
