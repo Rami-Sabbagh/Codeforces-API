@@ -594,16 +594,6 @@ public class CodeforcesClient {
         }
 
         /**
-         * Disables the connect timeout duration for this client.
-         *
-         * @return This builder.
-         */
-        public Builder timeout() {
-            httpClientBuilder.connectTimeout(null);
-            return this;
-        }
-
-        /**
          * Sets the connect timeout duration for this client.
          *
          * @param timeout The duration to allow the underlying connection to be established.
