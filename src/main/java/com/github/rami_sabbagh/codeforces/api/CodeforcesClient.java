@@ -212,6 +212,7 @@ public class CodeforcesClient {
      * @throws CFException          When the Codeforces API responses with a failure.
      */
     private <R> R request(String methodName, SortedMap<String, String> parameters, Class<R> type) throws IOException, InterruptedException, CFException {
+        //TODO: Rate-limit system.
         parameters.put("lang", lang);
 
         String endpoint = (apiKey == null) ? getEndpoint(methodName, parameters) : getAuthorizedEndpoint(methodName, parameters);
