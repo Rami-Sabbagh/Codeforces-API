@@ -3,7 +3,7 @@ package com.github.rami_sabbagh.codeforces.api;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 class CodeforcesClientTest {
 
